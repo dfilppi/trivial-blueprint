@@ -1,0 +1,36 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: >
+  Creates a minimal ONAP environment on Kubernetes
+
+imports:
+  - http://www.getcloudify.org/spec/cloudify/4.5/types.yaml
+
+node_templates:
+
+  server:
+    type: cloudify.nodes.Root
+    relationships:
+    - type: cloudify.relationships.connected_to
+      target: port
+    
+  software:
+    type: cloudify.nodes.SoftwareComponent
+    relationships:
+    - type: cloudify.relationships.contained_in
+      target: server
+
+  network:
+    type: cloudify.nodes.Network
+  
+  subnet:
+    type: cloudify.nodes.Subnet
+    relationships:
+    - type: cloudify.relationships.contained_in
+      target: network
+      
+  port:
+    type: cloudify.nodes.Port
+    relationships:
+    - type: cloudify.relationships.contained_in
+      target: subnet
